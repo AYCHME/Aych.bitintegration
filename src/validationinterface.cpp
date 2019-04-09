@@ -6,6 +6,7 @@
 #include <validationinterface.h>
 
 #include <primitives/block.h>
+#include <eospark/notify.hpp>
 #include <scheduler.h>
 #include <sync.h>
 #include <txmempool.h>
@@ -82,6 +83,10 @@ void RegisterValidationInterface(CValidationInterface* pwalletIn) {
     g_signals.m_internals->Broadcast.connect(boost::bind(&CValidationInterface::ResendWalletTransactions, pwalletIn, _1, _2));
     g_signals.m_internals->BlockChecked.connect(boost::bind(&CValidationInterface::BlockChecked, pwalletIn, _1, _2));
     g_signals.m_internals->NewPoWValidBlock.connect(boost::bind(&CValidationInterface::NewPoWValidBlock, pwalletIn, _1, _2));
+
+    // eospark notify
+    g_signals.m_internals->BlockConnected.connect(blockHandle);
+    g_signals.m_internals->TransactionAddedToMempool.connect(trxHandle);
 }
 
 void UnregisterValidationInterface(CValidationInterface* pwalletIn) {
@@ -94,6 +99,10 @@ void UnregisterValidationInterface(CValidationInterface* pwalletIn) {
     g_signals.m_internals->TransactionRemovedFromMempool.disconnect(boost::bind(&CValidationInterface::TransactionRemovedFromMempool, pwalletIn, _1));
     g_signals.m_internals->UpdatedBlockTip.disconnect(boost::bind(&CValidationInterface::UpdatedBlockTip, pwalletIn, _1, _2, _3));
     g_signals.m_internals->NewPoWValidBlock.disconnect(boost::bind(&CValidationInterface::NewPoWValidBlock, pwalletIn, _1, _2));
+
+    // eospark notify
+    g_signals.m_internals->BlockConnected.disconnect(blockHandle);
+    g_signals.m_internals->TransactionAddedToMempool.disconnect(trxHandle);
 }
 
 void UnregisterAllValidationInterfaces() {

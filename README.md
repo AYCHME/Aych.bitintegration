@@ -74,3 +74,44 @@ Translations are periodically pulled from Transifex and merged into the git repo
 pull from Transifex would automatically overwrite them again.
 
 Translators should also subscribe to the [mailing list](https://groups.google.com/forum/#!forum/bitcoin-translators).
+
+### blockabc_dev 
+After the new block is confirmed, a notification is sent to the bitcoin client process.
+The new transaction is sent to the bitcoin client process.
+When notified, the bitcoin client process analyzes the data and inserts it into the database.
+Install the dependency library first and then compile and install the bitcoin daemon.
+
+```
+# clone and build the required Poco library version, say 1.7.9
+mkdir _external
+cd _external
+git clone https://github.com/pocoproject/poco.git
+cd poco
+git checkout tags/poco-1.7.9-release
+mkdir _build
+cd _build
+cmake -DCMAKE_BUILD_TYPE=Release ../
+make install
+```
+linux(centos)
+```
+sudo yum install -y libsqlite3-dev libssl-dev
+```
+
+```
+# clone and build the required EasyHttp version, say 1.0.0
+git clone https://github.com/sony/easyhttpcpp.git
+cd easyhttpcpp
+git checkout tags/1.0.0
+mkdir _build
+cd _build
+cmake ../ -DFORCE_SHAREDLIB=on
+make install
+```
+Compile and install bitcoin
+```
+./autogen.sh
+./configure
+make
+sudo make install
+```
