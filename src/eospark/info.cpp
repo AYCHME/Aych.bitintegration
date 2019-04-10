@@ -2,6 +2,7 @@
 #include <tinyformat.h>
 #include "rpc/blockchain.h"
 #include "consensus/validation.h"
+#include "validation.h"
 #include "core_io.h"
 #include "serialize.h"
 #include "version.h"
@@ -27,6 +28,11 @@ std::string blockInfo(const CBlock &oneBlock, const CBlockIndex &blockindex){
     result.pushKV("weight", (int)::GetBlockWeight(oneBlock));
     result.pushKV("mediantime", (int64_t)blockindex.GetMedianTimePast());
     result.pushKV("chainwork", blockindex.nChainWork.GetHex());
+    // Only report confirmations if the block is on the main chain
+    int confirmations = -1;
+    if (chainActive.Contains(&blockindex))
+        confirmations = chainActive.Height() - blockindex.nHeight + 1;
+    result.pushKV("confirmations", confirmations);
 
     //transaction info
     UniValue txs(UniValue::VARR);
