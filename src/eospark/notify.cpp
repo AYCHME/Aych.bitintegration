@@ -31,11 +31,16 @@ int notify(const std::string &info, const std::string &postfix) {
         easyhttpcpp::Response::Ptr pResponse = pCall->execute();
 
         if (!pResponse->isSuccessful()) {
-            std::cout << "HTTP GET Error: (" << pResponse->getCode() << ")" << std::endl;
+            std::cerr << "HTTP Post Error: (" << pResponse->getCode() << ")" << std::endl;
             result = -1;
         } 
+
+        if(400 == pResponse->getCode()){
+            std::cerr << "HTTP Body Error: (" << pResponse->getBody()->toString() << std::endl;
+        }
+
     } catch (const std::exception& e) {
-        std::cout << "Error occurred: " << e.what() << std::endl;
+        std::cerr << "Error occurred: " << e.what() << std::endl;
         result = -1;
     }
 
@@ -44,12 +49,12 @@ int notify(const std::string &info, const std::string &postfix) {
 
 // handle new block
 void blockHandle(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex, const std::vector<CTransactionRef>& vtrx){
-    notify(blockInfo(*block, *pindex), "/block");
+    notify(blockInfo(*block, *pindex), "/bitcoind/block");
 }
 
 // handle new transaction
 void trxHandle(const CTransactionRef & vtrx){
-    notify(transactionInfo(vtrx), "/transaction");
+    notify(transactionInfo(vtrx), "/bitcoind/transaction");
 }
 
 

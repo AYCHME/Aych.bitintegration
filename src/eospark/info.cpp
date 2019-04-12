@@ -36,7 +36,7 @@ std::string blockInfo(const CBlock &oneBlock, const CBlockIndex &blockindex){
         TxToUniv(*tx, uint256(), objTx);
         txs.push_back(objTx);
     }
-    result.pushKV("tx", txs);
+    result.pushKV("txs", txs);
 
     //json data
     return result.write() + "\n";
@@ -45,7 +45,6 @@ std::string blockInfo(const CBlock &oneBlock, const CBlockIndex &blockindex){
 std::string transactionInfo(const CTransactionRef &vtx){
     UniValue result(UniValue::VOBJ);
     TxToUniv(*vtx, uint256(), result);
-    result.pushKV("blockhash", uint256().GetHex());
 
      //json data
     return result.write() + "\n";
