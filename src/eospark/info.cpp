@@ -16,7 +16,7 @@ std::string blockInfo(const CBlock &oneBlock, const CBlockIndex &blockindex){
     result.pushKV("nonce", (uint64_t)oneBlock.nNonce);
     result.pushKV("bits", strprintf("%08x", oneBlock.nBits));
     result.pushKV("merkleroot", oneBlock.hashMerkleRoot.GetHex());
-    result.pushKV("preblock", oneBlock.hashPrevBlock.GetHex());
+    result.pushKV("previousblockhash", oneBlock.hashPrevBlock.GetHex());
 
     //block index
     result.pushKV("hash", blockindex.GetBlockHash().GetHex());
@@ -36,7 +36,7 @@ std::string blockInfo(const CBlock &oneBlock, const CBlockIndex &blockindex){
         TxToUniv(*tx, uint256(), objTx);
         txs.push_back(objTx);
     }
-    result.pushKV("txs", txs);
+    result.pushKV("tx", txs);
 
     //json data
     return result.write() + "\n";
